@@ -204,17 +204,90 @@ print(os.environ['PATH'])
 print(os.getcwd())
 
 # os.chdir : 디렉터리 위치 변경
-os.chdir("C:/Dev")
-print(os.getcwd())
+# os.chdir("C:/Dev")
+# print(os.getcwd())
 
 # os.system : 시스템 명령어 호출
-print(os.system("dir"))
+print(os.system("ls"))
 
 # os.popen : 실행한 시스템 명렁어의 결괏값 돌려받기
-f = os.popen("dir")
+f = os.popen("ls")
 print(f.read())
 
 # os.mkdir(디렉토리) : 디렉터리 생성
 # os.rmdir(디렉토리) : 디렉터리 삭제. 단, 디렉터리가 비어 있어야 삭제할 수 있다.
 # os.remove(파일) : 파일 삭제
 # os.rename0(src, dst) : src라는 이름의 파일을 dst라는 이름으로 바꾼다.
+
+# zipfile : 여러 개의 파일을 zip형식으로 합치거나 이를 해제할 때 사용하는 모듈
+# a.txt, b.txt, c.txt 를 mytext.zip이라는 파일을 만들고 이 파일을 원래의 텍스트 파일 3개로 해제하는 프로그램을 만들려면?
+import zipfile
+
+# 파일 합치기
+with zipfile.ZipFile('mytext.zip', 'w') as myzip :
+    myzip.write('a.txt')
+    myzip.write('b.txt')
+    myzip.write('c.txt')
+
+# 해제하기
+# with zipfile.ZipFile('mytext.zip') as myzip :
+#     myzip.extractall()
+
+# 특정 파일만 해제하기
+# with zipfile.ZipFile('mytext.zip') as myzip :
+#     myzip.extract('a.txt')
+
+# 압축하여 묶기
+"""
+compression 
+ ZIP_STORED : 압축하지 않고 파일을 zip으로만 묶는다. 속도가 빠르다.
+ ZIP_DEFLATED : 일반적인 zip 압축으로 속도가 빠르고 압축률은 낮다 (호환성이 좋다)
+ ZIP_BZIP2 : bzip2 압축으로 압축률이 높고 속도가 느리다.
+ ZIP_LAMA : lzma 압축으로 압축률이 높고 속도가 느리다(7zip과 동일한 알고리즘으로 알려져 있다)
+
+compressionlevel 은 압축수준을 의미하는 숫자값으로 1은 속도가 가장 빠르지만 압축률이 낮고, 9는 속도는 가장 느리지만 압축률이 높다
+"""
+# with zipfile.ZipFile('compressionMytext.zip', 'w', compression=zipfile.ZIP_LZMA, compresslevel=9) as myzip :
+#     myzip.write('a.txt')
+#     myzip.write('b.txt')
+#     myzip.write('c.txt')
+
+
+
+# tempfile : 파일을 임시로 만들어서 사용할 때 유용한 모듈
+import tempfile
+
+# 중복되지 않는 임시 파일의 이름을 무작위로 만들어서 리턴
+# filename = tempfile.mkstemp()
+# print(filename)
+
+# f = tempfile.TemporaryFile()
+# print(f.name)
+# f.close()
+
+# json : JSON 데이터를 쉽게 처리하고자 사용하는 모듈
+import json
+with open('myinfo.json') as f:
+    data = json.load(f)
+
+print(type(data))
+print(data)
+
+with open('myinfo2.json', 'w') as f:
+    json.dump(data, f)
+
+d = {"name":"사라", "birth":"0323", "age":7}
+json_data = json.dumps(d) # json 문자열 생성
+print(json_data)
+
+print(json.loads(json_data)) # json 문자열 불러오기
+
+json_data2 = json.dumps(d, indent=2, ensure_ascii=False)
+print(json_data2)
+
+
+# webbrowser : 파이썬 프로그램에서 시스템 브라우저를 호출할 때 사용하는 모듈
+import webbrowser
+
+# webbrowser.open_new('http://python.org')
+webbrowser.open('http://python.org')
