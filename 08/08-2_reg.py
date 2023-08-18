@@ -116,3 +116,130 @@ p = re.compile('ab*')
 -> 리턴값을 p에 할당해 그 이후 작업 수행
 
 """
+
+"""
+정규식을 이용한 문자열 검색
+
+    Method      목적
+    match()     문자열의 처음부터 정규식과 매치되는지 조사한다.
+    search()    문자열 전체를 검색하여 정규식과 매치되는지 조사한다.
+    findall()   정규식과 매치된ㄴ 문자열(substring)을 리스트로 리턴한다.
+    finditer()  정규식과 매치되는 모든 문자열(substring)을 반복 가능한 객체로 리턴한다.
+
+"""
+import re
+
+p = re.compile('[a-z]+')
+
+# match
+m = p.match("python")
+print(m) # 매치에 일치하므로 match 객체가 리턴
+
+m = p.match("3 python")
+print(m) # 매치에 일치하지 않으므로 None이 리턴
+
+# 보통 다음과 같이 이용함
+"""
+p = re.compile(정규표현식)
+m = p.match( '조사할 문자열' )
+
+if m:
+    print('Match found : ', m.group())
+else:
+    print('No match')
+
+"""
+
+# search : 문자열 전체를 검색 -> match()는 문자열의 처음부터 검색
+m = p.search('3 python')
+print(m) # 매치에 일치하므로 match 객체가 리턴
+
+# findall : 패턴과 매치되는 모든 값을 찾아 리스트로 리턴
+result = p.findall('life is too shoart')
+print(result)
+
+# finditer
+result = p.finditer("life is too short")
+print(result)
+
+for r in result: print(r)
+
+# match 객체의 메서드
+"""
+    method  목적
+    group   매치된 문자열을 리턴한다.
+    start   매치된 문자열의 시작 위치를 리턴한다.
+    end     매치된 문자열의 끝 위치를 리턴한다.
+    span    매치된 문자열의 (시작, 끝)에 해당하는 튜플을 리턴한다.
+"""
+m = p.match("python")
+print(m.group())
+print(m.start())
+print(m.end())
+print(m.span())
+
+# 모듈 단위로 수행하기
+"""
+p = re.compile('[a-z]+')
+m = p.match("python")
+
+위에 코드는 아래와 동일
+re.match('[a-z]+', "python")
+"""
+
+# 컴파일 옵션
+"""
+정규식을 컴파일할 때 다음 옵션을 사용할 수 있다.
+
+DOTALL(S)     - .(dot)이 줄바꿈 문자를 포함해 모든 문자와 매치될 수 있게 한다.
+IGNORECASE(I) - 대소문자에 관계없이 매치될 수 있게 한다.
+MULTILINE(M)  - 여러 줄과 매치될 수 있게 한다. ^, $ 메타 문자 사용과 관계 있는 옵션
+VERBOSE(X)    - verbose 모드를 사용할 수 있게 한다. 정규식을 보기 편하게 만들 수 있고 주석 등을 사용할 수 있게 된다.
+
+"""
+
+# DOTALL, S : .(dot) 메타문자는 줄바꿈 문자(\n)를 제외한 모든 문자와 매치되는 규칙이 있다.
+# 만약 \n 문자도 포함하여 매치하고 싶다면 re.DOTALL or re.S 옵션을 사용하면 된다.
+p = re.compile('a.b')
+m = p.match('a\nb')
+print(m)
+
+p = re.compile('a.b', re.DOTALL)
+m = p.match('a\nb')
+print(m)
+
+# IGNORECASE, I : 대소문자 구별 없이 매치를 수행할 때 사용
+p = re.compile('[a-z]+', re.I)
+m1 = p.match('python')
+m2 = p.match('Python')
+m3 = p.match('PYTHON')
+print(m1, m2, m3)
+
+# MULTILINE, M
+# ^ : 문자열의 처음
+# $ : 문자열의 마지막
+p = re.compile("^python\s\w+") # python이라는 문자열로 시작, 그 뒤에 화이트스페이스, 그 뒤에 단어
+data = """python one
+life is too short
+python two
+you need python
+python three"""
+print(p.findall(data))
+
+p = re.compile("^python\s\w+", re.MULTILINE)
+print(p.findall(data))
+
+# VERBOSE, X : 주석 또는 줄 단위로 구분할 수 있게 함
+charref = re.compile(r'&[#](0[0-7]+|[0-9]+|x[0-9a-fA-F]+);')
+charref = re.compile(r"""
+ &[#]                # Start of a numeric entity reference
+ (
+     0[0-7]+         # Octal form
+   | [0-9]+          # Decimal form
+   | x[0-9a-fA-F]+   # Hexadecimal form
+ )
+ ;                   # Trailing semicolon
+""", re.VERBOSE)
+
+# 역슬래시 문제 : \를 사용한 표현이 계속 반복되는 정규식이라면 raw string 표현법을 사용
+p = re.compile(r'\\section') # \\section 문자열 
