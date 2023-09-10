@@ -15,4 +15,13 @@
  - 가장 일반적인 방법은 마킹
  - 흰색:미방문(unseen), 회색:방문중(seen),검정:방문끝(Completed)
 
+그래프 탐색 응용
+ Web crawling
+ Social networking
+ Network broadcast
+ Garbage collection
+ Model checking
+ Solving puzzles
+ Etc.
+
 """
